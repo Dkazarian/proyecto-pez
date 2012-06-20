@@ -32,7 +32,8 @@ public class PezSeguidor extends Pez {
 	}
 	private void buscarObjetivo() {
 		for(Pez pez: this.pecera.getPeces()){
-			if(pez != this && pez != this.getObjetivo()){
+			if(pez != this && pez != this.getObjetivo()  && this.puedeVerA(pez) ){
+				
 				this.objetivo = pez;
 				break;
 			}

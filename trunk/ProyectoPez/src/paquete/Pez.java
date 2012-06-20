@@ -18,6 +18,10 @@ public class Pez implements CosaDePecera{
 	protected double velocidad;
 	protected Pecera pecera;
 	protected CosaDePecera objetivo;
+
+	private int rangoVisionX = 100;
+
+	private int rangoVisionY = 200;
 	
 	
 	protected enum Direccion{
@@ -145,9 +149,23 @@ public class Pez implements CosaDePecera{
 		else if(destino.x < this.getPosicionX())
 			this.moverIzquierda();
 		
+		if(destino.y > this.getPosicionY())
+			this.moverAbajo();
+		
+		if(destino.y < this.getPosicionY())
+			this.moverArriba();
 	}
 	
 	
+	private void moverArriba() {
+		//TODO: mejorar
+		this.posicion.y--;
+		
+	}
+	private void moverAbajo() {
+		//TODO: mejorar
+		this.posicion.y++;
+	}
 	private void girar() {
 		
 		switch(this.direccion){
@@ -174,8 +192,8 @@ public class Pez implements CosaDePecera{
 	 ***********************/
 
 	public boolean estaCercaDe(Point pos){
-		return Math.abs(this.getPosicionX()-pos.x+this.getLargo())<30 && 
-		Math.abs(this.getPosicionY()-pos.y)<50;
+		return Math.abs(this.getPosicionX()-pos.x+this.getLargo())<20 && 
+		Math.abs(this.getPosicionY()-pos.y)<30;
 	}
 	
 
@@ -186,6 +204,20 @@ public class Pez implements CosaDePecera{
 		return false;
 	}
 
+	protected boolean puedeVerA(CosaDePecera cosa) {
+		
+		
+		return 
+			Math.abs(this.getPosicionX()-cosa.getPosicionX()+this.getLargo())<= this.rangoVisionX && 
+			Math.abs(this.getPosicionY()-cosa.getPosicionY())<=rangoVisionY &&
+			this.estaMirandoHacia(cosa.getPosicion());
+	}
+
+	
+	private boolean estaMirandoHacia(Point punto) {
+		return ( (punto.x < this.getPosicionX() )&& this.direccion == Direccion.DERECHA) || 
+		( (punto.x > this.getPosicionX()) && this.direccion == Direccion.IZQUIERDA); 
+	}
 	
 	/***********************
 	 **     ACCESSORS     **

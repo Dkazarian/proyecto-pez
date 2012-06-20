@@ -30,13 +30,14 @@ public class PeceraTest {
 
 	private static void peceraConTodo() {
 		prepararVentanaConPecera();
+		pecera.agregarPez( new PezSeguidor(new Point(100,300),10));
 		pecera.agregarPez( new PezMaster(new Point(200,100),10));
 		pecera.agregarPez( new Pez(new Point(300,150),8));
 		pecera.agregarPez( new PezMaster(new Point(100,140),13));
 		pecera.agregarPez( new PezAvatar(new Point(2,150),7));
 		pecera.agregarPez( new PezMaster(new Point(2,300),7));
-		pecera.agregarPez( new PezSeguidor(new Point(100,310),10));
 		pecera.agregarPez( new Pez(new Point(100,310),10));
+		pecera.agregarPez( new PezSeguidor(new Point(200,205),15));
 	
 		
 	}
