@@ -9,13 +9,12 @@ import javax.imageio.ImageIO;
 
 public class Pez implements CosaDePecera{
 	
-	protected BufferedImage imagenIzq;
-	protected BufferedImage imagenDer;
+	protected BufferedImage imagenes[] = new BufferedImage[2];
 	
 	protected Direccion direccion;
 	protected Point posicion;
 	
-	
+	protected String imagePath = "graficos/sprites-pez-rojo.png";
 	protected double velocidad;
 	protected Pecera pecera;
 	protected CosaDePecera objetivo;
@@ -42,13 +41,36 @@ public class Pez implements CosaDePecera{
 	}
 	
 	public void cargarImagenes(){
+		
+			BufferedImage spriteSheet = this.getSpriteSheet();
+			imagenes[Direccion.DERECHA.ordinal()] = spriteSheet.getSubimage(
+		           0, //Inicio X
+		           0, //Inicio Y
+		            68, //Longitud
+		            37 //Altura
+		        );
+
+			imagenes[Direccion.IZQUIERDA.ordinal()] = spriteSheet.getSubimage(
+			           68, 
+			           0, 
+			           68, 
+			           37 
+			        );
+			
+		
+	}
+	
+
+	protected BufferedImage getSpriteSheet() {
+		BufferedImage spriteSheet;
 		try {
-			imagenIzq = ImageIO.read(new File("graficos/pezizq.png"));
-			imagenDer = ImageIO.read(new File("graficos/pezder.png"));
+			spriteSheet = ImageIO.read(new File(this.imagePath));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		return spriteSheet;
 	}
+
 	
 
 	/***********************
@@ -110,7 +132,7 @@ public class Pez implements CosaDePecera{
 			this.moverDerecha();
 		else if(destino.x < this.getPosicionX())
 			this.moverIzquierda();
-		//else this.mover();
+		
 	}
 	
 	
@@ -163,10 +185,7 @@ public class Pez implements CosaDePecera{
 
 	public BufferedImage getImagen() {
 			
-		if(this.direccion == Direccion.DERECHA) 
-			return this.imagenDer;
-		else return this.imagenIzq;
-		
+		return this.imagenes[this.direccion.ordinal()];
 	}
 	
 	public int getPosicionX() {
@@ -192,22 +211,6 @@ public class Pez implements CosaDePecera{
 		return this.getImagen().getHeight();
 	}
 	
-	public BufferedImage getImagenIzq() {
-		return imagenIzq;
-	}
-
-	public void setImagenIzq(BufferedImage imagenIzq) {
-		this.imagenIzq = imagenIzq;
-	}
-
-	public BufferedImage getImagenDer() {
-		return imagenDer;
-	}
-
-	public void setImagenDer(BufferedImage imagenDer) {
-		this.imagenDer = imagenDer;
-	}
-
 	public Direccion getDireccion() {
 		return direccion;
 	}
