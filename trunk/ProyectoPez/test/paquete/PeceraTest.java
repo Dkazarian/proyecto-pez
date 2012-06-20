@@ -18,8 +18,8 @@ public class PeceraTest {
 		
 	
 	public static void main(String[] args) {
-		peceraConPecesNormales();
-	    //peceraConPezMaster();
+		//peceraConPecesNormales();
+	    peceraConPezMaster();
 	}
 	
 	

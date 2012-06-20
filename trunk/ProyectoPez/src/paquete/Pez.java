@@ -30,6 +30,7 @@ public class Pez implements CosaDePecera{
 	/***********************
 	 **   INICIALIZACION  **
 	 ***********************/	
+	
 	public Pez(Point posicionInicial, int velocidad) {
 		
 		this.posicion = posicionInicial;
@@ -56,6 +57,7 @@ public class Pez implements CosaDePecera{
 	
 	public void mover() {
 		
+	
 		switch(this.direccion){
 			
 			case DERECHA: 
@@ -131,10 +133,6 @@ public class Pez implements CosaDePecera{
 	
 	
 	
-	
-	public void seguirA(CosaDePecera objetivo){
-		this.setObjetivo(objetivo);
-	}
 
 
 	/***********************
