@@ -55,7 +55,7 @@ public class Pecera extends JPanel implements ActionListener{
 
 
 	/***********************
-	 **       RESTO(?)    **
+	 **      RESTO(?)     **
 	 ***********************/	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {

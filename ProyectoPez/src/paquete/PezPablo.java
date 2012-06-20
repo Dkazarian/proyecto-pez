@@ -5,10 +5,6 @@ import java.awt.Point;
 public class PezPablo extends Pez {
 
 	
-		Point destino = new Point(400, 100);
-		CosaDePecera objetivo = null;
-		
-		
 		public PezPablo(Point posicionInicial, int velocidad) {
 			super(posicionInicial, velocidad);
 		
@@ -19,9 +15,10 @@ public class PezPablo extends Pez {
 			if(this.objetivo==null){
 				buscarObjetivo();
 			}
+			
 			if(this.objetivo != null){
 				
-				if(this.estaCercaDe(destino)){
+				if(this.estaCercaDe(this.objetivo.getPosicion())){
 					
 					this.setVelocidad(objetivo.getVelocidad());
 					
@@ -32,6 +29,8 @@ public class PezPablo extends Pez {
 			
 			
 		}
+		
+		
 		private void buscarObjetivo() {
 			for(Pez pez: this.pecera.getPeces()){
 				if(pez!=this && this.puedeVer(pez) && !pez.getObjetivo().equals(this)){

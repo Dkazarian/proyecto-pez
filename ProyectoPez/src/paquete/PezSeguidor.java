@@ -4,13 +4,11 @@ import java.awt.Point;
 
 public class PezSeguidor extends Pez {
 	
-	//TODO velocidad
-
-	Point destino = new Point(400, 100);
-		
+	
 	public PezSeguidor(Point posicionInicial, int velocidad) {
 		super(posicionInicial, velocidad);
 	}
+	
 	
 	@Override
 	public void mover() {
@@ -19,7 +17,7 @@ public class PezSeguidor extends Pez {
 		}
 		if(this.objetivo != null){
 			
-			if(this.estaCercaDe(destino)){
+			if(this.estaCercaDe(this.objetivo.getPosicion())){
 				
 				this.setVelocidad(objetivo.getVelocidad());
 				
@@ -39,6 +37,12 @@ public class PezSeguidor extends Pez {
 		}
 		
 	}
+	
+	
+	public void seguirA(CosaDePecera objetivo){
+		this.setObjetivo(objetivo);
+	}
+
 	
 
 	
