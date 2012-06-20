@@ -6,7 +6,10 @@ public class PezSeguidor extends Pez {
 	
 	
 	public PezSeguidor(Point posicionInicial, int velocidad) {
+		//TODO: feo feo
 		super(posicionInicial, velocidad);
+		imagePath = "graficos/sprites-pez-azul.png"; 
+		this.cargarImagenes();
 	}
 	
 	
@@ -15,7 +18,7 @@ public class PezSeguidor extends Pez {
 		if(this.objetivo==null){
 			buscarObjetivo();
 		}
-		if(this.objetivo != null){
+		if(this.objetivo != null ){
 			
 			if(this.estaCercaDe(this.objetivo.getPosicion())){
 				
@@ -44,6 +47,5 @@ public class PezSeguidor extends Pez {
 	}
 
 	
-
 	
 }
