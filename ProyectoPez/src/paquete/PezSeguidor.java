@@ -19,7 +19,7 @@ public class PezSeguidor extends Pez {
 		}
 		if(this.objetivo != null ){
 			
-			if(this.estaCercaDe(this.objetivo.getPosicion())){
+			if(this.estaCercaDe(this.objetivo.getPosicion()) && this.velocidad> this.objetivo.getVelocidad()){
 				
 				this.setVelocidad(objetivo.getVelocidad());
 				
