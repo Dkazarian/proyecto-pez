@@ -14,7 +14,7 @@ public class Pez implements CosaDePecera{
 	protected Direccion direccion;
 	protected Point posicion;
 	
-	protected String imagePath = "graficos/sprites-pez-rojo.png";
+	
 	protected double velocidad;
 	protected Pecera pecera;
 	protected CosaDePecera objetivo;
@@ -29,21 +29,35 @@ public class Pez implements CosaDePecera{
 	/***********************
 	 **   INICIALIZACION  **
 	 ***********************/	
-	
 	public Pez(Point posicionInicial, int velocidad) {
+		
+		this(posicionInicial,velocidad, "graficos/sprites-pez-rojo.png");
+		
+		
+	}
+	public Pez(Point posicionInicial, int velocidad, String pathImagen) {
 		
 		this.posicion = posicionInicial;
 		this.direccion = Direccion.DERECHA;
-		this.cargarImagenes();
+		this.cargarImagenes(pathImagen);
 		this.setVelocidad(velocidad);
 		
 		
 	}
 	
-	public void cargarImagenes(){
+	public void cargarImagenes(String path){
 		
-			BufferedImage spriteSheet = this.getSpriteSheet();
-			imagenes[Direccion.DERECHA.ordinal()] = spriteSheet.getSubimage(
+			BufferedImage spriteSheet = this.getSpriteSheet(path);
+			
+			this.cargarImagenIzqYDer(spriteSheet);
+			
+			
+		
+	}
+	
+
+	protected void cargarImagenIzqYDer(BufferedImage spriteSheet) {
+		imagenes[Direccion.DERECHA.ordinal()] = spriteSheet.getSubimage(
 		           0, //Inicio X
 		           0, //Inicio Y
 		            68, //Longitud
@@ -56,15 +70,12 @@ public class Pez implements CosaDePecera{
 			           68, 
 			           37 
 			        );
-			
 		
 	}
-	
-
-	protected BufferedImage getSpriteSheet() {
+	protected BufferedImage getSpriteSheet(String path) {
 		BufferedImage spriteSheet;
 		try {
-			spriteSheet = ImageIO.read(new File(this.imagePath));
+			spriteSheet = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

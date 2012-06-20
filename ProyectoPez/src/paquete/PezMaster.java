@@ -9,9 +9,8 @@ public class PezMaster extends Pez {
 	
 	
 	public PezMaster(Point posicionInicial, int velocidad) {
-		super(posicionInicial, velocidad);
-		imagePath = "graficos/sprites-pez-negro.png";
-		this.cargarImagenes();
+		super(posicionInicial, velocidad,"graficos/sprites-pez-negro.png");
+		
 		
 	}
 	
