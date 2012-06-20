@@ -60,16 +60,17 @@ public class Pez implements CosaDePecera{
 		imagenes[Direccion.DERECHA.ordinal()] = spriteSheet.getSubimage(
 		           0, //Inicio X
 		           0, //Inicio Y
-		            68, //Longitud
-		            37 //Altura
+		           spriteSheet.getWidth()/2, //Longitud
+		           spriteSheet.getHeight()
 		        );
 
 			imagenes[Direccion.IZQUIERDA.ordinal()] = spriteSheet.getSubimage(
-			           68, 
+					spriteSheet.getWidth()/2, 
 			           0, 
-			           68, 
-			           37 
+			           spriteSheet.getWidth()/2, 
+			           spriteSheet.getHeight()
 			        );
+		
 		
 	}
 	protected BufferedImage getSpriteSheet(String path) {
