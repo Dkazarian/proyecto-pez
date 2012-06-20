@@ -6,10 +6,9 @@ public class PezSeguidor extends Pez {
 	
 	
 	public PezSeguidor(Point posicionInicial, int velocidad) {
-		//TODO: feo feo
-		super(posicionInicial, velocidad);
-		imagePath = "graficos/sprites-pez-azul.png"; 
-		this.cargarImagenes();
+		
+		super(posicionInicial, velocidad,"graficos/sprites-pez-azul.png");
+	
 	}
 	
 	
