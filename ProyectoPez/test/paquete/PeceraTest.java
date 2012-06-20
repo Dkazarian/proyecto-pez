@@ -12,19 +12,21 @@ import paquete.PezSeguidor;
 
 public class PeceraTest {
 	
-	static Pecera pecera;
-
-	public static void prepararVentanaConPecera(){
-		JFrame j = new JFrame("Pecera");
+	public static Pecera pecera;
+	
+	
 		
-		pecera = new Pecera();
-		j.add(pecera);
-		j.setSize(pecera.getWidth(), pecera.getHeight());
-		j.setResizable(false);
-		j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		j.setVisible(true);
+	
+	public static void main(String[] args) {
+		peceraConPecesNormales();
+	    //peceraConPezMaster();
 	}
 	
+	
+	
+	/***********************
+	 **       TESTS       **
+	 ***********************/
 	
 	public static void peceraConPecesNormales(){
 		prepararVentanaConPecera();
@@ -51,8 +53,20 @@ public class PeceraTest {
 		
 	}
 	
-	public static void main(String[] args) {
-		//peceraConPecesNormales();
-	    peceraConPezMaster();
+	/***********************
+	 **   INICIALIZACION  **
+	 ***********************/
+
+
+	public static void prepararVentanaConPecera(){
+		JFrame j = new JFrame("Pecera");
+		
+		pecera = new Pecera();
+		j.add(pecera);
+		j.setSize(pecera.getWidth(), pecera.getHeight());
+		j.setResizable(false);
+		j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		j.setVisible(true);
 	}
+	
 }
