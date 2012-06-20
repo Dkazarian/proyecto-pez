@@ -20,25 +20,20 @@ public class PeceraTest {
 	public static void main(String[] args) {
 		//peceraConPecesNormales();
 	    //peceraConPezMaster();
-		//peceraConPecesMasterYNormales();
-		peceraConPezAvatar();
-	}
-	
-	
-	
-	private static void peceraConPezAvatar() {
-		prepararVentanaConPecera();
-		pecera.agregarPez( new PezAvatar(new Point(2,200),7));
+		peceraConTodo();
 		
 	}
+	
 
 
 
-	private static void peceraConPecesMasterYNormales() {
+
+	private static void peceraConTodo() {
 		prepararVentanaConPecera();
 		pecera.agregarPez( new PezMaster(new Point(200,100),10));
 		pecera.agregarPez( new Pez(new Point(300,150),8));
 		pecera.agregarPez( new PezMaster(new Point(100,140),13));
+		pecera.agregarPez( new PezAvatar(new Point(2,150),7));
 		pecera.agregarPez( new PezMaster(new Point(2,300),7));
 		pecera.agregarPez( new PezSeguidor(new Point(100,310),10));
 		pecera.agregarPez( new Pez(new Point(100,310),10));
