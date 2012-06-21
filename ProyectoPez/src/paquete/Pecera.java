@@ -4,15 +4,16 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+
 import java.util.HashSet;
 import java.util.Set;
 
 
-import javax.imageio.ImageIO;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import utils.ImageUtils;
 
 public class Pecera extends JPanel implements ActionListener{
 	
@@ -27,9 +28,9 @@ public class Pecera extends JPanel implements ActionListener{
 	 **   INICIALIZACION  **
 	 ***********************/	
 	
-	public Pecera() {
-				
-		this.cargarFondo("graficos/pecera.jpg");
+	public Pecera(int width, int height) {
+		
+		this.cargarFondo("graficos/pecera.jpg", width, height);
 		
 		//Ejecuta this.actionPerfomed() cada 80 milisecs
 		timer = new Timer(80, this); 
@@ -37,19 +38,13 @@ public class Pecera extends JPanel implements ActionListener{
 	}
 	
 
-	void cargarFondo(String path){
+	public void cargarFondo(String path, int width, int height){
 		
-		try{
-			
-			fondo = ImageIO.read(new File(path));
+		
+		fondo = ImageUtils.resize(ImageUtils.loadImage("graficos/pecera.jpg"),width, height);
+		this.setSize(width, height);
 				
-			this.setSize(fondo.getWidth(), fondo.getHeight());
-				
-			
-		} catch (IOException e) {
-			
-			throw new RuntimeException("Problema cargando el fondo de la pecera: "+e.getMessage());
-		}
+		
 	}
 
 
@@ -62,7 +57,7 @@ public class Pecera extends JPanel implements ActionListener{
 		for(Pez pez: this.peces) pez.mover();
 		repaint(); //Llama a paint para actualizar lo que se muestra
 	}
-		
+	
 
 	public void paint(Graphics g){
 			

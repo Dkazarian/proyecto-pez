@@ -14,18 +14,18 @@ public class PezTest {
 	Pez pez = new Pez(new Point(0,0),1);
 	@Before
 	public void setUp() {
-		pez.setPecera(new Pecera());
+		pez.setPecera(new Pecera(800,400));
 	}
 	@Test
 	public void moverDerecha() {
 		int xi = pez.getPosicionX();
-		pez.moverDerecha();
+		pez.moverDerechaHaciaElPunto(pez.getPosicionX()+1);
 		Assert.assertTrue(xi<pez.getPosicionX());
 	}
 	@Test
 	public void moverIzquierda() {
 		int xi = pez.getPosicionX();
-		pez.moverIzquierda();
+		pez.moverIzquierdaHaciaElPunto(pez.getPosicionX()-1);
 		Assert.assertTrue(xi>pez.getPosicionX());
 
 	}
