@@ -2,7 +2,7 @@ package paquete;
 
 import java.awt.Point;
 
-public class PezPablo extends Pez {
+public class PezPablo extends PezSinAI {
 
 	
 		public PezPablo(Point posicionInicial, int velocidad) {

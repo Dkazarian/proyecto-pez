@@ -4,8 +4,11 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
+
+import utils.ImageUtils;
 
 public class Pez implements CosaDePecera{
 	
@@ -14,25 +17,31 @@ public class Pez implements CosaDePecera{
 	protected Direccion direccion;
 	protected Point posicion;
 	
-	
 	protected double velocidad;
 	protected Pecera pecera;
 	protected CosaDePecera objetivo;
+	
+	protected Point miDestino;
+	protected double velocidadActual;
+	protected boolean moviendome;
+	Random generator = new Random(); //lo usamos para explorar la pecera de momento
 
-	private int rangoVisionX = 100;
+	private int rangoVisionX = 200;
 
-	private int rangoVisionY = 200;
+	private int rangoVisionY = 400;
 	
 	
 	protected enum Direccion{
-		IZQUIERDA,
-		DERECHA	
+		DERECHA,
+		IZQUIERDA
+
 	}
 		
 
 	/***********************
 	 **   INICIALIZACION  **
-	 ***********************/	
+	 ***********************/
+	
 	public Pez(Point posicionInicial, int velocidad) {
 		
 		this(posicionInicial,velocidad, "graficos/sprites-pez-rojo.png");
@@ -45,38 +54,19 @@ public class Pez implements CosaDePecera{
 		this.direccion = Direccion.DERECHA;
 		this.cargarImagenes(pathImagen);
 		this.setVelocidad(velocidad);
+		this.moviendome = false;
 		
 		
 	}
 	
 	public void cargarImagenes(String path){
 		
-			BufferedImage spriteSheet = this.getSpriteSheet(path);
-			
-			this.cargarImagenIzqYDer(spriteSheet);
-			
-			
-		
+			imagenes = ImageUtils.splitImage(ImageUtils.loadImage(path), 1, 2);
+					
 	}
 	
 
-	protected void cargarImagenIzqYDer(BufferedImage spriteSheet) {
-		imagenes[Direccion.DERECHA.ordinal()] = spriteSheet.getSubimage(
-		           0, //Inicio X
-		           0, //Inicio Y
-		           spriteSheet.getWidth()/2, //Longitud
-		           spriteSheet.getHeight()
-		        );
-
-			imagenes[Direccion.IZQUIERDA.ordinal()] = spriteSheet.getSubimage(
-					spriteSheet.getWidth()/2, 
-			           0, 
-			           spriteSheet.getWidth()/2, 
-			           spriteSheet.getHeight()
-			        );
-		
-		
-	}
+	
 	protected BufferedImage getSpriteSheet(String path) {
 		BufferedImage spriteSheet;
 		try {
@@ -90,103 +80,228 @@ public class Pez implements CosaDePecera{
 	
 
 	/***********************
+	 **        AI         **
+	 ***********************/
+
+	public void mover() {
+		if(this.objetivo == null){
+			if (this.miDestino == null){
+				//no tenemos ni objetivo ni destino, ejecutamos AI
+				this.executeAI();
+			}else{
+				//tenemos destino, vamos hacia el
+				this.irHaciaElPunto(miDestino);
+			}
+		}else{
+			//tenemos objetivo, vamos hacia el
+			this.irHaciaLaCosa(this.objetivo);
+		}
+	}
+	
+	
+	
+	
+	private void executeAI(){
+		Pez amigo = buscarPezCercanoQueSeEsteMoviendo();
+		if(amigo == null){
+			//no hay nadie cerca, entonces exploramos
+			int x = generator.nextInt(pecera.getHeight()/2-this.getAlto());
+			int y = generator.nextInt(pecera.getWidth()/2-this.getLargo());
+			this.miDestino = new Point(x, y);
+			this.moviendome = true;
+		}else{
+			//encontramos un pez, vamos hacia el
+			this.objetivo = amigo;
+			this.moviendome = true;
+		}
+	}
+	
+	
+	
+	public boolean estaQuieto(){
+		return this.moviendome == false;
+	}
+	
+	private Pez buscarPezCercanoQueSeEsteMoviendo(){ //nice name ;)
+		for(Pez pez: this.pecera.getPeces()){
+			if(pez != this  && !pez.estaQuieto() && pez.objetivo != this ){
+				//si no es este mismo pez, no esta quieto, y no me esta siguiendo =>
+				return pez;
+			}
+		}
+		return null; //si no encontro ninguno nos da null..
+	}
+	
+	
+	//TODO falta hacer.
+	private boolean estaCercaDe(CosaDePecera cosa){
+		int x = this.posicion.x - cosa.getPosicionX();
+		int y = this.posicion.y - cosa.getPosicionY();
+		return (-10<x)||(x<10);
+		/*
+		int vecX = Math.abs(this.posicion.x - cosa.getPosicionX());
+		int vecY = Math.abs(this.posicion.y - cosa.getPosicionY());
+		double modulo = Math.sqrt(vecX^2+vecY^2);
+		return (modulo <= 10);*/
+	}
+	
+
+	/***********************
 	 **     MOVIMIENTO    **
 	 ***********************/
 	
-	public void mover() {
-		
-	
-		switch(this.direccion){
-			
-			case DERECHA: 
-					this.moverDerecha();
-					break;
-			case IZQUIERDA:
-					this.moverIzquierda();
-					break;
-				
+	protected void irHaciaLaCosa(CosaDePecera _objetivo){
+		if(this.estaEnElRangoDe(_objetivo)){
+			this.moviendome = false;
+			this.objetivo = null;
+		}else{
+			this.irHaciaElPunto(_objetivo.getPosicion());
 		}
-		
-		
 	}
 	
 	
-	public void moverIzquierda() {
-		
-		this.posicion = new Point(this.posicion.x - this.getVelocidad(), this.posicion.y);
-		
-		if(this.direccion != Direccion.IZQUIERDA) this.girar();
-		
-		if(this.seSalioDelLimite()){
-			
-			this.girar();
-			this.posicion.x = 0;
+	protected void irHaciaElPunto(Point destino) {
+		Point oldPosition = new Point(this.getPosicionX(), this.getPosicionY());
+		if (this.llegoAlPunto(destino)){
+			this.moviendome = false; //llegamos, nos detenemos.
+			this.miDestino = null;
+			return;
 		}
 		
 		
-	}
-	
-
-	public void moverDerecha() {
-		
-		this.posicion = new Point(this.posicion.x + this.getVelocidad(), this.posicion.y);
-		
-		if(this.direccion != Direccion.DERECHA) this.girar();
-		
-		if(this.seSalioDelLimite()){
-			
-			this.girar();
-			this.posicion.x = this.pecera.getWidth()-this.getLargo();
-			
-		}
-		
-		
-	}
-	
-	protected void moverHacia(Point destino) {
 		if(destino.x > this.getPosicionX())
-			this.moverDerecha();
+			this.moverDerechaHaciaElPunto(destino.x);
 		else if(destino.x < this.getPosicionX())
-			this.moverIzquierda();
+			this.moverIzquierdaHaciaElPunto(destino.x);
 		
 		if(destino.y > this.getPosicionY())
-			this.moverAbajo();
+			this.moverAbajoHaciaElPunto(destino.y);
 		
 		if(destino.y < this.getPosicionY())
-			this.moverArriba();
+			this.moverArribaHaciaElPunto(destino.y);
+		
+		/*if(destino.x > this.getPosicionX())
+			this.irHaciaNuevaPosicionALaDerecha(destino.x);
+		else if(destino.x < this.getPosicionX())
+			this.irHaciaNuevaPosicionALaIzquierda(destino.x);
+		
+		if(destino.y > this.getPosicionY())
+			this.irHaciaNuevaPosicionHaciaAbajo(destino.y);
+		
+		if(destino.y < this.getPosicionY())
+			this.irHaciaNuevaPosicionHaciaArriba(destino.y);
+		
+		
+		if (this.getPosicion().equals(oldPosition)){
+			this.moviendome = false; //llegamos, nos detenemos.
+			this.miDestino = null;
+		}*/
 	}
 	
 	
-	private void moverArriba() {
+	
+	
+	
+	
+	
+	/*protected void irHaciaNuevaPosicionALaDerecha(int x) {
+		int newX = this.posicion.x + this.getVelocidad();
+		if( this.posicion.x + this.getVelocidad() > x ) newX = x;
+		if( puntoOcupado(new Point(newX, this.posicion.y))) { newX = this.posicion.x; }
+		this.posicion.x = newX;
+	}
+	protected void irHaciaNuevaPosicionALaIzquierda(int x) {
+		int newX = this.posicion.x - this.getVelocidad();
+		if( this.posicion.x - this.getVelocidad() < x ) newX = x;
+		if( puntoOcupado(new Point(newX, this.posicion.y))) { newX = this.posicion.x; }
+		this.posicion.x = newX;
+	}
+	protected void irHaciaNuevaPosicionHaciaAbajo(int y) {
+		int newY = this.posicion.y + this.getVelocidad();
+		if( this.posicion.y + this.getVelocidad() > y ) newY = y;
+		if( puntoOcupado(new Point(this.posicion.x, newY))) { newY = this.posicion.y; }
+		this.posicion.y = newY;
+	}
+	protected void irHaciaNuevaPosicionHaciaArriba(int y) {
+		int newY = this.posicion.y - this.getVelocidad();
+		if( this.posicion.y - this.getVelocidad() < y ) newY = y;
+		if( puntoOcupado(new Point(this.posicion.x, newY))) { newY = this.posicion.y; }
+		this.posicion.y = newY;
+	}*/
+	
+	
+	
+	
+	
+	
+	
+	
+	private boolean llegoAlPunto(Point destino){
+		return (this.posicion.equals(destino));
+	}
+	
+	private void moverArribaHaciaElPunto(int y) {
 		//TODO: mejorar
-		this.posicion.y--;
+		int newY = this.posicion.y - this.getVelocidad();
+		if (newY < y){ newY = y; }
+		this.posicion = new Point(this.posicion.x, newY);
 		
 	}
-	private void moverAbajo() {
+	private void moverAbajoHaciaElPunto(int y) {
 		//TODO: mejorar
-		this.posicion.y++;
+		int newY = this.posicion.y + this.getVelocidad();
+		if (newY > y){ newY = y; }
+		this.posicion = new Point(this.posicion.x, newY);
 	}
-	private void girar() {
-		
-		switch(this.direccion){
-		
-			case DERECHA: 
-					this.direccion = Direccion.IZQUIERDA;
-					break;
-			case IZQUIERDA:
-					this.direccion = Direccion.DERECHA;
-					break;
-				
+	
+	public void moverIzquierdaHaciaElPunto(int x) {
+		//TODO: mejorar
+		this.direccion = Direccion.IZQUIERDA;
+		int newX = this.posicion.x - this.getVelocidad();
+		if (newX < x){ newX = x; }
+		this.posicion = new Point(newX, this.posicion.y);
+	}
+	
+	public void moverDerechaHaciaElPunto(int x) {
+		//TODO: mejorar
+		this.direccion = Direccion.DERECHA;
+		int newX = this.posicion.x + this.getVelocidad();
+		if (newX > x){ newX = x; }
+		this.posicion = new Point(newX, this.posicion.y);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	/*private boolean puntoOcupado(Point punto){
+		for(Pez pez : pecera.getPeces()){
+			if(pez.ocupaElPunto(punto)) return true;
 		}
-		
-		
-		
+		return false;
 	}
 	
 	
 	
-
-
+	
+	public boolean ocupaElPunto(Point punto){
+		return (this.ocupaElPuntoX(punto.x) && this.ocupaElPuntoY(punto.y));
+	}
+	
+	private boolean ocupaElPuntoX(int x){
+		int Xmin = this.posicion.x;
+		return ((Xmin <= x) && (Xmin + this.getLargo() >= x));
+	}
+	private boolean ocupaElPuntoY(int y){
+		int Ymin = this.posicion.y;
+		return ((Ymin <= y) && (Ymin + this.getAlto() >= y));
+	}*/
+	
+	
+	
 	/***********************
 	 **     POSICION      **
 	 ***********************/
@@ -196,14 +311,14 @@ public class Pez implements CosaDePecera{
 		Math.abs(this.getPosicionY()-pos.y)<30;
 	}
 	
-
-	private boolean seSalioDelLimite() {
+	
+	/*private boolean seSalioDelLimite() {
 		if(this.pecera != null){
 			return !this.pecera.estaDentroDeLosLimites(this);
 		}
 		return false;
-	}
-
+	}*/
+	
 	protected boolean puedeVerA(CosaDePecera cosa) {
 		
 		
@@ -217,6 +332,12 @@ public class Pez implements CosaDePecera{
 	private boolean estaMirandoHacia(Point punto) {
 		return ( (punto.x < this.getPosicionX() )&& this.direccion == Direccion.DERECHA) || 
 		( (punto.x > this.getPosicionX()) && this.direccion == Direccion.IZQUIERDA); 
+	}
+	
+	protected boolean estaEnElRangoDe(CosaDePecera cosa){
+		return (Math.abs(this.getPosicionX()-cosa.getPosicionX()+this.getLargo())<=100)
+				&&
+			   (Math.abs(this.getPosicionY()-cosa.getPosicionY()+this.getLargo())<=100);
 	}
 	
 	/***********************
