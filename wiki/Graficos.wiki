@@ -8,4 +8,4 @@
 =Tutoriales=
 <a href=http://www.foro.lospillaos.es/1-vt6784.html?start=2>Mover imagen con teclado</a>
 
-<a href=http://www.javafrikitutorials.com/2011/10/sprite-animation-en-java-sprite.html> Ejemplo de animación de sprites</a>
+<a href=http://www.javafrikitutorials.com/2011/10/sprite-animation-en-java-sprite.html> Clase ImageUtils y ejemplo de animación de sprites</a>
