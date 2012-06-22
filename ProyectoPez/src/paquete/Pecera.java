@@ -1,11 +1,8 @@
 package paquete;
 
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import java.util.HashSet;
@@ -91,6 +88,13 @@ public class Pecera extends JPanel implements ActionListener{
 			cosa.getPosicionY()>=0 && cosa.getPosicionY()+cosa.getAlto() <= this.getHeight();  
 		
 	}
+	
+	public void destruirComida(Comida comida){
+		this.comidas.remove(comida);
+		for (Pez pez : this.peces){
+			if(pez.getObjetivo()==comida) pez.setObjetivo(null);
+		}
+	}
 
 	
 	/***********************
@@ -99,6 +103,9 @@ public class Pecera extends JPanel implements ActionListener{
 	
 	public Set<Pez> getPeces() {
 		return peces;
+	}
+	public Set<Comida> getComidas() {
+		return comidas;
 	}
 	
 	

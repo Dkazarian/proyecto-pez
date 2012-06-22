@@ -1,6 +1,5 @@
 package paquete;
 
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
