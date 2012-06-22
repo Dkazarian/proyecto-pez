@@ -49,6 +49,8 @@ public class PeceraTest {
 		pecera.agregarPez( new PezControl(new Point(0,0),30));
 		pecera.agregarPez( new PezSinAI(new Point(100,50),10));
 		pecera.agregarPez( new Pez(new Point(400,205),15));
+		pecera.agregarPez( new Pez(new Point(400,100),10));
+		pecera.agregarPez( new Pez(new Point(400,300),5));
 	}
 
 
