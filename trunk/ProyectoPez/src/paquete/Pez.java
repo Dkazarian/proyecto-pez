@@ -67,17 +67,7 @@ public class Pez implements CosaDePecera{
 	
 
 	
-	protected BufferedImage getSpriteSheet(String path) {
-		BufferedImage spriteSheet;
-		try {
-			spriteSheet = ImageIO.read(new File(path));
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		return spriteSheet;
-	}
-
-	
+	 
 
 	/***********************
 	 **  COMPORTAMIENTO   **
