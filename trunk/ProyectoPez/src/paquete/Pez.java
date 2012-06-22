@@ -110,7 +110,7 @@ public class Pez extends CosaDePecera{
 			}else{
 				this.setObjetivo(obj);
 			}
-		}else{
+		}else if (this.getObjetivo().esComida()){
 			//vamos por la comida.
 			Comida obj = (Comida)this.getObjetivo();
 			this.irHaciaLaCosa(obj);
@@ -119,6 +119,8 @@ public class Pez extends CosaDePecera{
 				//TODO la destruimos.
 				pecera.destruirComida(obj);
 			}
+		}else{ //es null
+			this.executeAI();
 		}
 	}
 	
