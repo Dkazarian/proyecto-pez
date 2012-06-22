@@ -133,19 +133,8 @@ public class Pez implements CosaDePecera{
 	}
 	
 	
-	//TODO falta hacer.
-	private boolean estaCercaDe(CosaDePecera cosa){
-		int x = this.posicion.x - cosa.getPosicionX();
-		int y = this.posicion.y - cosa.getPosicionY();
-		return (-10<x)||(x<10);
-		/*
-		int vecX = Math.abs(this.posicion.x - cosa.getPosicionX());
-		int vecY = Math.abs(this.posicion.y - cosa.getPosicionY());
-		double modulo = Math.sqrt(vecX^2+vecY^2);
-		return (modulo <= 10);*/
-	}
 	
-
+	
 	/***********************
 	 **     MOVIMIENTO    **
 	 ***********************/
@@ -161,7 +150,6 @@ public class Pez implements CosaDePecera{
 	
 	
 	protected void irHaciaElPunto(Point destino) {
-		Point oldPosition = new Point(this.getPosicionX(), this.getPosicionY());
 		if (this.llegoAlPunto(destino)){
 			this.moviendome = false; //llegamos, nos detenemos.
 			this.miDestino = null;
