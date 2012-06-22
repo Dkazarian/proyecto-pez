@@ -109,12 +109,12 @@ public class Pez implements CosaDePecera{
 	
 	
 	public boolean estaQuieto(){
-		return this.moviendome == false;
+		return !this.moviendome;
 	}
 	
 	private Pez buscarPezCercanoQueSeEsteMoviendo(){ //nice name ;)
 		for(Pez pez: this.pecera.getPeces()){
-			if(pez != this  && !pez.estaQuieto() && pez.objetivo != this && this.puedeVerA(pez) ){
+			if(pez != this  && !pez.estaQuieto() && !pez.estaSiguiendoA(this) && this.puedeVerA(pez) ){
 				//si no es este mismo pez, no esta quieto, y no me esta siguiendo =>
 				return pez;
 			}
@@ -319,6 +319,9 @@ public class Pez implements CosaDePecera{
 			   (Math.abs(this.getPosicionY()-cosa.getPosicionY()+this.getLargo())<=100);
 	}
 	
+  protected boolean estaSiguiendoA(CosaDePecera cosa){
+       return this.objetivo == cosa;   
+  }
 	/***********************
 	 **     ACCESSORS     **
 	 ***********************/
