@@ -26,9 +26,9 @@ public class Pez implements CosaDePecera{
 	protected boolean moviendome;
 	Random generator = new Random(); //lo usamos para explorar la pecera de momento
 
-	private int rangoVisionX = 200;
+	private int rangoVisionX = 400;
 
-	private int rangoVisionY = 400;
+	private int rangoVisionY = 200;
 	
 	
 	protected enum Direccion{
@@ -80,7 +80,7 @@ public class Pez implements CosaDePecera{
 	
 
 	/***********************
-	 **        AI         **
+	 **  COMPORTAMIENTO   **
 	 ***********************/
 
 	public void mover() {
@@ -124,7 +124,7 @@ public class Pez implements CosaDePecera{
 	
 	private Pez buscarPezCercanoQueSeEsteMoviendo(){ //nice name ;)
 		for(Pez pez: this.pecera.getPeces()){
-			if(pez != this  && !pez.estaQuieto() && pez.objetivo != this ){
+			if(pez != this  && !pez.estaQuieto() && pez.objetivo != this && this.puedeVerA(pez) ){
 				//si no es este mismo pez, no esta quieto, y no me esta siguiendo =>
 				return pez;
 			}
@@ -140,7 +140,7 @@ public class Pez implements CosaDePecera{
 	 ***********************/
 	
 	protected void irHaciaLaCosa(CosaDePecera _objetivo){
-		if(this.estaEnElRangoDe(_objetivo)){
+		if(this.estaEnElPunto(_objetivo.getPosicion())){
 			this.moviendome = false;
 			this.objetivo = null;
 		}else{
@@ -149,24 +149,24 @@ public class Pez implements CosaDePecera{
 	}
 	
 	
-	protected void irHaciaElPunto(Point destino) {
-		if (this.llegoAlPunto(destino)){
+	protected void irHaciaElPunto(Point _destino) {
+		if (this.estaEnElPunto(_destino)){
 			this.moviendome = false; //llegamos, nos detenemos.
 			this.miDestino = null;
 			return;
 		}
 		
 		
-		if(destino.x > this.getPosicionX())
-			this.moverDerechaHaciaElPunto(destino.x);
-		else if(destino.x < this.getPosicionX())
-			this.moverIzquierdaHaciaElPunto(destino.x);
+		if(_destino.x > this.getPosicionX())
+			this.moverDerechaHaciaElPunto(_destino.x);
+		else if(_destino.x < this.getPosicionX())
+			this.moverIzquierdaHaciaElPunto(_destino.x);
 		
-		if(destino.y > this.getPosicionY())
-			this.moverAbajoHaciaElPunto(destino.y);
+		if(_destino.y > this.getPosicionY())
+			this.moverAbajoHaciaElPunto(_destino.y);
 		
-		if(destino.y < this.getPosicionY())
-			this.moverArribaHaciaElPunto(destino.y);
+		if(_destino.y < this.getPosicionY())
+			this.moverArribaHaciaElPunto(_destino.y);
 		
 		/*if(destino.x > this.getPosicionX())
 			this.irHaciaNuevaPosicionALaDerecha(destino.x);
@@ -224,9 +224,6 @@ public class Pez implements CosaDePecera{
 	
 	
 	
-	private boolean llegoAlPunto(Point destino){
-		return (this.posicion.equals(destino));
-	}
 	
 	private void moverArribaHaciaElPunto(int y) {
 		//TODO: mejorar
@@ -294,6 +291,10 @@ public class Pez implements CosaDePecera{
 	 **     POSICION      **
 	 ***********************/
 
+	private boolean estaEnElPunto(Point destino){
+		return (this.posicion.equals(destino));
+	}
+	
 	public boolean estaCercaDe(Point pos){
 		return Math.abs(this.getPosicionX()-pos.x+this.getLargo())<20 && 
 		Math.abs(this.getPosicionY()-pos.y)<30;

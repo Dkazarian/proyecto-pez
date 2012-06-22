@@ -47,6 +47,7 @@ public class PezControl extends PezSinAI implements KeyListener {
                 derecha = false;
                 break;
         }
+        this.moviendome = false;
     }
 
     //tecla presionada
@@ -65,6 +66,7 @@ public class PezControl extends PezSinAI implements KeyListener {
                 abajo = true;
                 break;
         }
+        this.moviendome = true;
     } 
 
     
