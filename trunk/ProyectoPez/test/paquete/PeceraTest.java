@@ -14,18 +14,18 @@ public class PeceraTest {
 	private static Pecera pecera;
 	static Random generator = new Random();
 	
-		
+	
 	
 	public static void main(String[] args) {
 		//peceraConPecesNormales();
-		peceraConAlgunosPecesAvatar();
-		//peceraConPezRobot();
+		//peceraConAlgunosPecesAvatar();
+		peceraConPezRobot();
 	}
 	
-
-
-
-
+	
+	
+	
+	
 	private static void peceraConAlgunosPecesAvatar() {
 		prepararVentanaConPecera();
 		pecera.agregarPez( new Pez(new Point(100,300),10));
@@ -36,12 +36,10 @@ public class PeceraTest {
 		pecera.agregarPez( new Pez(new Point(2,300),20));
 		pecera.agregarPez( new Pez(new Point(100,310),10));
 		pecera.agregarPez( new Pez(new Point(200,205),15));
-	
-		
 	}
-
-
-
+	
+	
+	
 	/***********************
 	 **       TESTS       **
 	 ***********************/
@@ -53,24 +51,21 @@ public class PeceraTest {
 		crearPezComun(8);
 		crearPezComun(7);
 	}
-
-
+	
+	
 	public static void peceraConPecesNormales(){
 		prepararVentanaConPecera();
 		crearPezComun(8);
 		crearPezComun(7);
 		crearPezComun(6);
 		crearPezComun(8);
-	
-	
-		
 	}
 	
 	/***********************
 	 **   INICIALIZACION  **
 	 ***********************/
-
-
+	
+	
 	public static void prepararVentanaConPecera(){
 		JFrame j = new JFrame("Pecera");
 		
