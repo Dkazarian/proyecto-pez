@@ -6,7 +6,7 @@ public class PezSinAI extends Pez{
 
 	public PezSinAI(Point posicionInicial, int velocidad) {
 		super(posicionInicial, velocidad, "graficos/pez-ftsm.png");
-		
+		this.moviendome = true;
 	}
 	
 	public PezSinAI(Point posicionInicial, int velocidad, String string) {
@@ -100,13 +100,15 @@ public class PezSinAI extends Pez{
 	}
 	
 	protected void moverArriba() {
-		//TODO: mejorar
+		
 		this.posicion.y -= this.getVelocidad()/2;
+		if(this.seSalioDelLimite()) this.posicion.y = 0;
 		
 	}
 	protected void moverAbajo() {
 		//TODO: mejorar
 		this.posicion.y+= this.getVelocidad()/2;
+		if(this.seSalioDelLimite()) this.posicion.y = pecera.getHeight()-this.getAlto();
 	}
 	
 

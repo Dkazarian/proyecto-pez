@@ -1,8 +1,11 @@
 package paquete;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import java.util.HashSet;
@@ -20,6 +23,7 @@ public class Pecera extends JPanel implements ActionListener{
 	
 	private static final long serialVersionUID = 8605588196339457872L; //Quita el warning de "no tiene serialVersionUID" :P
 	Set<Pez> peces = new HashSet<Pez>();
+	Set<Comida> comidas = new HashSet<Comida>(); //Esto es temporal, despues hay q ver si se pueden meter todas las cosas en el mismo lugar(?)
 	private BufferedImage fondo; 
 	Timer timer;
 	
@@ -32,9 +36,15 @@ public class Pecera extends JPanel implements ActionListener{
 		
 		this.cargarFondo("graficos/pecera.jpg", width, height);
 		
+		
+		//Por alguna razon no deja que Pecera sea MouseListener así que tuve que crear una clase que lo sea
+		this.addMouseListener(new DetectorDeClicks(this));
+		
 		//Ejecuta this.actionPerfomed() cada 80 milisecs
 		timer = new Timer(80, this); 
 		timer.start();   
+	
+		
 	}
 	
 
@@ -50,20 +60,26 @@ public class Pecera extends JPanel implements ActionListener{
 
 
 	/***********************
-	 **      RESTO(?)     **
+	 **      EVENTOS      **
 	 ***********************/	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		for(Pez pez: this.peces) pez.mover();
+		for(Comida comida:comidas)comida.mover();
 		repaint(); //Llama a paint para actualizar lo que se muestra
 	}
 	
 
+
+	/***********************
+	 **      RESTO(?)     **
+	 ***********************/	
 	public void paint(Graphics g){
 			
 		super.paint(g);
 		g.drawImage(this.fondo,0,0,null);
 		for(Pez pez:peces) g.drawImage(pez.getImagen(),pez.getPosicionX(),pez.getPosicionY(),null);
+		for(Comida comida:comidas) g.drawImage( comida.getImagen(), comida.getPosicionX(), comida.getPosicionY(),null);
 				
 	}
 		
@@ -72,7 +88,7 @@ public class Pecera extends JPanel implements ActionListener{
 		 
 		return
 			cosa.getPosicionX()>=0 && cosa.getPosicionX()+cosa.getLargo()< this.getWidth() &&
-			cosa.getPosicionY()>=0 && cosa.getPosicionY()+cosa.getAlto()< this.getHeight();  
+			cosa.getPosicionY()>=0 && cosa.getPosicionY()+cosa.getAlto() <= this.getHeight();  
 		
 	}
 
@@ -86,17 +102,7 @@ public class Pecera extends JPanel implements ActionListener{
 	}
 	
 	
-	@Override
-	public int getWidth() {
-		
-		return fondo.getWidth();
-	}
-	
-	@Override
-	public int getHeight() {
-		
-		return fondo.getHeight();
-	}
+
 
 	public void agregarPez(Pez pez) {
 		
@@ -104,6 +110,18 @@ public class Pecera extends JPanel implements ActionListener{
 		pez.setPecera(this);
 		
 	}
+
+
+	public void addComida(Comida comida) {
+		comida.setPecera(this);
+		comidas.add(comida);
+		
+	}
+
+
+	
+
+
 	
 	
 			
