@@ -68,6 +68,9 @@ public abstract class CosaDePecera {
 	public boolean esUnPez(){
 		return false;
 	}
+	public boolean esComida(){
+		return false;
+	}
 
 	
 }

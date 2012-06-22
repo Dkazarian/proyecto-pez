@@ -60,6 +60,9 @@ public class Comida extends CosaDePecera {
 		
 		
 	}
+	public boolean esComida(){
+		return true;
+	}
 
 
 }
