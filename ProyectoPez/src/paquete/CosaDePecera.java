@@ -1,20 +1,72 @@
 package paquete;
 
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 
-public interface CosaDePecera {
+public abstract class CosaDePecera {
 	
-	public Point getPosicion();
+	protected Point posicion;
+	
+	protected Pecera pecera;
 
-	public int getVelocidad();
+	public abstract void setVelocidad(int velocidad);
 
-	public int getPosicionX();
+	public abstract int getVelocidad();
 
-	public int getPosicionY();
+	public abstract BufferedImage getImagen();
 
-	public int getLargo();
+	public abstract void mover();
+
+	/***********************
+	 **     ACCESSORS     **
+	 ***********************/
+	
+
+
+
+	public int getPosicionX() {
 		
-	public int getAlto();
+		return posicion.x;
+	}
+
+	public int getPosicionY() {
+		return posicion.y;
+	}
+
+	public void setPecera(Pecera pecera) {
+			this.pecera = pecera;
+			
+	}
+
+
+	public int getLargo() {
+		return this.getImagen().getWidth();
+	}
+
+	
+	public int getAlto() {
+		return this.getImagen().getHeight();
+	}
+
+	public Pecera getPecera() {
+		return pecera;
+	}
+
+	public void setPosicion(Point posicion) {
+		this.posicion = posicion;
+	}
+
+	
+	
+
+	
+	public Point getPosicion() {
+		
+		return this.posicion;
+	}
+
+
 
 	
 }

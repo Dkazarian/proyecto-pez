@@ -10,17 +10,13 @@ import javax.imageio.ImageIO;
 
 import utils.ImageUtils;
 
-public class Pez implements CosaDePecera{
+public class Pez extends CosaDePecera{
 	
-	protected BufferedImage imagenes[] = new BufferedImage[2];
+	protected BufferedImage imagenes[];
 	
 	protected Direccion direccion;
-	protected Point posicion;
-	
-	protected double velocidad;
-	protected Pecera pecera;
 	protected CosaDePecera objetivo;
-	
+	protected double velocidad;
 	protected Point miDestino;
 	protected double velocidadActual;
 	protected boolean moviendome;
@@ -92,17 +88,19 @@ public class Pez implements CosaDePecera{
 	
 	
 	private void executeAI(){
-		Pez amigo = buscarPezCercanoQueSeEsteMoviendo();
+		CosaDePecera amigo = buscarPezCercanoQueSeEsteMoviendo();
 		if(amigo == null){
 			//no hay nadie cerca, entonces exploramos
 			int x = generator.nextInt(pecera.getHeight()/2-this.getAlto());
 			int y = generator.nextInt(pecera.getWidth()/2-this.getLargo());
 			this.miDestino = new Point(x, y);
 			this.moviendome = true;
+			
 		}else{
 			//encontramos un pez, vamos hacia el
 			this.objetivo = amigo;
 			this.moviendome = true;
+			
 		}
 	}
 	
@@ -112,7 +110,7 @@ public class Pez implements CosaDePecera{
 		return !this.moviendome;
 	}
 	
-	private Pez buscarPezCercanoQueSeEsteMoviendo(){ //nice name ;)
+	private CosaDePecera buscarPezCercanoQueSeEsteMoviendo(){ //nice name ;)
 		for(Pez pez: this.pecera.getPeces()){
 			if(pez != this  && !pez.estaQuieto() && !pez.estaSiguiendoA(this) && this.puedeVerA(pez) ){
 				//si no es este mismo pez, no esta quieto, y no me esta siguiendo =>
@@ -319,45 +317,9 @@ public class Pez implements CosaDePecera{
 			   (Math.abs(this.getPosicionY()-cosa.getPosicionY()+this.getLargo())<=100);
 	}
 	
-  protected boolean estaSiguiendoA(CosaDePecera cosa){
+	protected boolean estaSiguiendoA(CosaDePecera cosa){
        return this.objetivo == cosa;   
-  }
-	/***********************
-	 **     ACCESSORS     **
-	 ***********************/
-	
-	public int getVelocidad(){
-		return (int)this.velocidad;
 	}
-
-	public BufferedImage getImagen() {
-			
-		return this.imagenes[this.direccion.ordinal()];
-	}
-	
-	public int getPosicionX() {
-		
-		return posicion.x;
-	}
-	
-	public int getPosicionY() {
-		return posicion.y;
-	}
-	
-	public void setPecera(Pecera pecera) {
-			this.pecera = pecera;
-			
-	}
-	@Override
-	public int getLargo() {
-		return this.getImagen().getWidth();
-	}
-	
-	@Override
-	public int getAlto(){
-		return this.getImagen().getHeight();
-	}
-	
 	public Direccion getDireccion() {
 		return direccion;
 	}
@@ -367,24 +329,6 @@ public class Pez implements CosaDePecera{
 	}
 
 	
-
-	public Pecera getPecera() {
-		return pecera;
-	}
-
-	public void setPosicion(Point posicion) {
-		this.posicion = posicion;
-	}
-
-	public void setVelocidad(double velocidad) {
-		this.velocidad = velocidad;
-	}
-
-	@Override
-	public Point getPosicion() {
-		
-		return this.posicion;
-	}
 
 	public CosaDePecera getObjetivo() {
 		
@@ -396,7 +340,24 @@ public class Pez implements CosaDePecera{
 	}
 
 
+	public int getVelocidad() {
+		return (int)this.velocidad;
+	}
 	
+	public BufferedImage getImagen() {
+		
+		return this.imagenes[this.direccion.ordinal()];
+	}
+	
+	public void setVelocidad(double velocidad) {
+		this.velocidad = velocidad;
+		
+	}
+	@Override
+	public void setVelocidad(int velocidad) {
+	 
+		this.velocidad = velocidad;
+	}
 	
 	
 	

@@ -46,11 +46,19 @@ public class PezControl extends PezSinAI implements KeyListener {
             case KeyEvent.VK_RIGHT:
                 derecha = false;
                 break;
+            case KeyEvent.VK_SPACE:
+            	this.tirarComida();
+            	break;
         }
         
     }
 
-    //tecla presionada
+    private void tirarComida() {
+		pecera.addComida(new Comida(new Point(this.getPosicionX(),this.getPosicionY()+this.getAlto()/2)));
+		
+	}
+
+	//tecla presionada
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_UP:
