@@ -6,7 +6,6 @@ public class PezSinAI extends Pez{
 
 	public PezSinAI(Point posicionInicial, int velocidad) {
 		super(posicionInicial, velocidad, "graficos/pez-ftsm.png");
-		this.moviendome = true;
 	}
 	
 	public PezSinAI(Point posicionInicial, int velocidad, String string) {

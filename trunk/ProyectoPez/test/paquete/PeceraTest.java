@@ -1,6 +1,7 @@
 package paquete;
 
 import java.awt.Point;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -10,15 +11,15 @@ import paquete.Pez;
 
 public class PeceraTest {
 	
-	public static Pecera pecera;
-	
+	private static Pecera pecera;
+	static Random generator = new Random();
 	
 		
 	
 	public static void main(String[] args) {
-	//	peceraConPecesNormales();
-		//peceraConAlgunosPecesAvatar();
-		peceraConPezRobot();
+		//peceraConPecesNormales();
+		peceraConAlgunosPecesAvatar();
+		//peceraConPezRobot();
 	}
 	
 
@@ -46,22 +47,20 @@ public class PeceraTest {
 	 ***********************/
 	private static void peceraConPezRobot() {
 		prepararVentanaConPecera();
-		pecera.agregarPez( new PezControl(new Point(0,0),30));
-		pecera.agregarPez( new PezSinAI(new Point(100,50),10));
-		pecera.agregarPez( new Pez(new Point(400,205),15));
-		pecera.agregarPez( new Pez(new Point(400,100),10));
-		pecera.agregarPez( new Pez(new Point(400,300),5));
+		pecera.agregarPez( new PezControl(new Point(0,0),15));
+		pecera.agregarPez( new PezSinAI(new Point(100,50),7));
+		crearPezComun(7);
+		crearPezComun(8);
+		crearPezComun(7);
 	}
 
 
 	public static void peceraConPecesNormales(){
 		prepararVentanaConPecera();
-		pecera.agregarPez( new Pez(new Point(200,100),5));
-		pecera.agregarPez( new Pez(new Point(300,150),8));
-		pecera.agregarPez( new Pez(new Point(100,140),8));
-		pecera.agregarPez( new Pez(new Point(2,300),7));
-		pecera.agregarPez( new Pez(new Point(100,310),10));
-		pecera.agregarPez( new Pez(new Point(100,310),10));
+		crearPezComun(8);
+		crearPezComun(7);
+		crearPezComun(6);
+		crearPezComun(8);
 	
 	
 		
@@ -81,6 +80,14 @@ public class PeceraTest {
 		j.setResizable(false);
 		j.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		j.setVisible(true);
+	}
+	
+	private static void crearPezComun(int velocidad){
+		int x = generator.nextInt(pecera.getWidth()) - 80;
+		int y = generator.nextInt(pecera.getHeight()) - 80;
+		Point p = new Point(x, y);
+		
+		pecera.agregarPez( new Pez(p, velocidad));
 	}
 	
 }
