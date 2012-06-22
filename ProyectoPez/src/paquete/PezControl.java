@@ -71,7 +71,7 @@ public class PezControl extends PezSinAI implements KeyListener {
        
     @Override   
     public boolean estaQuieto(){
-      return !(this.derecha | this.izquierda | this.arriba | this.abajo);
+      return !(this.derecha || this.izquierda || this.arriba || this.abajo);
     }
 
     
