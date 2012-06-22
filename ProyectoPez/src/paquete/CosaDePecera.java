@@ -66,7 +66,9 @@ public abstract class CosaDePecera {
 		return this.posicion;
 	}
 
-
+	public boolean esUnPez(){
+		return false;
+	}
 
 	
 }
