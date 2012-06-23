@@ -122,10 +122,14 @@ public class Pecera extends JPanel implements ActionListener{
 	public void addComida(Comida comida) {
 		comida.setPecera(this);
 		comidas.add(comida);
-		
+		notificarALosPecesQueLLegoComida(comida);
 	}
 
-
+	private void notificarALosPecesQueLLegoComida(Comida comida){
+		for (Pez pez : peces){
+			pez.notificarQueLlegoComida(comida);
+		}
+	}
 	
 
 
