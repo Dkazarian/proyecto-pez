@@ -14,7 +14,6 @@ public class Pez extends CosaDePecera{
 	protected CosaDePecera objetivo;
 	protected double velocidad;
 	private Point destino;
-	RandomGenerator generator = new RandomGenerator(); //lo usamos para explorar la pecera de momento
 	
 	protected enum Direccion{
 		DERECHA,
@@ -121,7 +120,7 @@ public class Pez extends CosaDePecera{
 		int x; int y;
 		int xActual = this.getPosicion().x;
 		
-		y = this.getPosicion().y + generator.randomInt(-100, 100);
+		y = this.getPosicion().y + RandomGenerator .randomInt(-100, 100);
 		if ( y < 0 ) y = 0;
 		if ( y > pecera.getHeight() ) y = pecera.getHeight();
 		
@@ -140,10 +139,10 @@ public class Pez extends CosaDePecera{
 	}
 	
 	private int puntoXalaDerechaDe(int xActual){
-		return generator.randomInt(xActual, pecera.getWidth()-this.getLargo());
+		return RandomGenerator.randomInt(xActual, pecera.getWidth()-this.getLargo());
 	}
 	private int puntoXalaIzquierdaDe(int xActual){
-		return generator.randomInt(0, xActual);
+		return RandomGenerator.randomInt(0, xActual);
 	}
 	
 	
