@@ -2,9 +2,9 @@ package paquete;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 import utils.ImageUtils;
+import utils.RandomGenerator;
 
 public class Pez extends CosaDePecera{
 	
@@ -14,47 +14,31 @@ public class Pez extends CosaDePecera{
 	protected CosaDePecera objetivo;
 	protected double velocidad;
 	private Point destino;
-	//protected double velocidadActual;
-	//protected boolean moviendome;
-	Random generator = new Random(); //lo usamos para explorar la pecera de momento
-
-	//private int rangoVisionX = 400;
-
-	//private int rangoVisionY = 200;
-	
+	RandomGenerator generator = new RandomGenerator(); //lo usamos para explorar la pecera de momento
 	
 	protected enum Direccion{
 		DERECHA,
 		IZQUIERDA
-
 	}
-		
-
+	
 	/***********************
 	 **   INICIALIZACION  **
 	 ***********************/
 	
 	public Pez(Point posicionInicial, int velocidad) {
-		
 		this(posicionInicial,velocidad, "graficos/sprites-pez-rojo.png");
-		
-		
 	}
 	public Pez(Point posicionInicial, int velocidad, String pathImagen) {
-		
 		this.posicion = posicionInicial;
 		this.direccion = Direccion.DERECHA;
 		this.cargarImagenes(pathImagen);
 		this.setVelocidad(velocidad);
 		this.setObjetivo(null);
 		this.setDestino(null);
-		
 	}
 	
 	public void cargarImagenes(String path){
-		
 			imagenes = ImageUtils.splitImage(ImageUtils.loadImage(path), 1, 2);
-					
 	}
 	
 
@@ -113,9 +97,7 @@ public class Pez extends CosaDePecera{
 		Pez amigo = buscarPezParaSeguirlo();
 		if(amigo == null){
 			//no hay nadie cerca, entonces exploramos
-			int x = generator.nextInt(pecera.getHeight()/2-this.getAlto());
-			int y = generator.nextInt(pecera.getWidth()/2-this.getLargo());
-			this.setDestino(new Point(x, y));
+			this.setDestino(buscarPuntoParaExplorar());
 		}else{
 			//encontramos un pez, entonces lo seguimos
 			this.setObjetivo(amigo);
@@ -133,6 +115,39 @@ public class Pez extends CosaDePecera{
 		return null; //si no encontro ninguno nos da null..
 	}
 	
+	
+	private Point buscarPuntoParaExplorar(){
+		final int cercaDelBorde = 100;
+		int x; int y;
+		int xActual = this.getPosicion().x;
+		
+		y = this.getPosicion().y + generator.randomInt(-100, 100);
+		if ( y < 0 ) y = 0;
+		if ( y > pecera.getHeight() ) y = pecera.getHeight();
+		
+		if (this.getDireccion()==Direccion.DERECHA){
+			if (xActual > pecera.getWidth() - cercaDelBorde){
+				x = puntoXalaIzquierdaDe(xActual);
+			}else{ x= puntoXalaDerechaDe(xActual); }
+		}else{
+			if (xActual < cercaDelBorde){
+				x = puntoXalaDerechaDe(xActual);
+			}else{ x= puntoXalaIzquierdaDe(xActual); }
+		}
+		
+		Point ret = new Point(x, y);
+		return ret;
+	}
+	
+	private int puntoXalaDerechaDe(int xActual){
+		return generator.randomInt(xActual, pecera.getWidth()-this.getLargo());
+	}
+	private int puntoXalaIzquierdaDe(int xActual){
+		return generator.randomInt(0, xActual);
+	}
+	
+	
+	
 
 	public void notificarQueLlegoComida(Comida comida){
 		//llego comida, vamos hacia ella!!
@@ -141,17 +156,30 @@ public class Pez extends CosaDePecera{
 	}
 	
 	
-
-	/************************************
-	 **     ANALISIS DE MOVIEMIENTO    **
-	 ************************************/
+	private Comida buscarComida(){
+		for (Comida comida : pecera.getComidas()){
+			return comida;
+		}
+		return null;
+	}
+	
+	
+	
+	/***********************************
+	 **     ANALISIS DE MOVIMIENTO    **
+	 ***********************************/
 	
 	private void irHaciaLaComida(Comida comida){
 		this.irHaciaLaCosa(comida);
 		if (this.estaEnElPunto(comida.getPosicion())){
 			//llegamos a la comida!!
-			//TODO la destruimos.
 			pecera.destruirComida(comida);
+			
+			//y ahora nos fijamos si hay mas comida =)
+			Comida masComida = buscarComida();
+			if (masComida == null)		{ this.setObjetivo(null);
+							 	   }else{ this.setObjetivo(masComida); }
+			
 		}
 	}
 	
@@ -167,6 +195,10 @@ public class Pez extends CosaDePecera{
 	
 	private boolean estaLejosDe(CosaDePecera cosa){
 		return !this.estaEnElPunto(cosa.getPosicion());
+		/*double distancia;
+		distancia = Math.abs(cosa.getPosicion().x - this.getPosicion().x);
+		distancia+= Math.abs(cosa.getPosicion().y - this.getPosicion().y);
+		return distancia > 40;*/
 	}
 	
 	
