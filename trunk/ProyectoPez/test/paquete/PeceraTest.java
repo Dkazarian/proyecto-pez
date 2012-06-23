@@ -1,18 +1,18 @@
 package paquete;
 
 import java.awt.Point;
-import java.util.Random;
 
 import javax.swing.JFrame;
 
 import paquete.Pecera;
 import paquete.Pez;
+import utils.RandomGenerator;
 
 
 public class PeceraTest {
 	
 	private static Pecera pecera;
-	static Random generator = new Random();
+	static RandomGenerator generator = new RandomGenerator();
 	
 	
 	
@@ -80,8 +80,8 @@ public class PeceraTest {
 	}
 	
 	private static void crearPezComun(int velocidad){
-		int x = generator.nextInt(pecera.getWidth()) - 80;
-		int y = generator.nextInt(pecera.getHeight()) - 80;
+		int x = generator.randomInt(0, pecera.getWidth()) - 80;
+		int y = generator.randomInt(0, pecera.getHeight()) - 80;
 		Point p = new Point(x, y);
 		
 		pecera.agregarPez( new Pez(p, velocidad));
