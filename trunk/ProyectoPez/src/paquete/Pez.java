@@ -13,7 +13,7 @@ public class Pez extends CosaDePecera{
 	protected Direccion direccion;
 	protected CosaDePecera objetivo;
 	protected double velocidad;
-	protected Point destino;
+	private Point destino;
 	//protected double velocidadActual;
 	//protected boolean moviendome;
 	Random generator = new Random(); //lo usamos para explorar la pecera de momento
@@ -46,7 +46,8 @@ public class Pez extends CosaDePecera{
 		this.direccion = Direccion.DERECHA;
 		this.cargarImagenes(pathImagen);
 		this.setVelocidad(velocidad);
-		
+		this.setObjetivo(null);
+		this.setDestino(null);
 		
 	}
 	
@@ -63,76 +64,66 @@ public class Pez extends CosaDePecera{
 	/***********************
 	 **  COMPORTAMIENTO   **
 	 ***********************/
+
+	@Override
+	public boolean esUnPez(){ return true; }
 	
+	
+	//metodo de llamado publico, inicio de la IA:
 	public void mover() {
-		if(this.objetivo == null){
-			if (this.destino == null){
-				//no tenemos ni objetivo ni destino, ejecutamos AI
-				this.executeAI();
-			}else{
-				if (this.estaEnElPunto(destino)){
-					destino = null;
-				}else{
-					this.irHaciaElPunto(destino);
-				}
-			}
+		if (tengoObjetivo()){
+			cumplirObjetivo();
 		}else{
-			//tenemos objetivo, vamos hacia el
-			this.evaluarSiSeguirAlObjetivo();
+			buscarObjetivo();
 		}
 	}
 	
 	
 	
 	
-	private void executeAI(){
-		CosaDePecera amigo = buscarPezParaSeguirlo();
+	
+	private void cumplirObjetivo(){
+		
+		if (miObjetivoEsExplorar()){
+			if (this.estaEnElPunto(this.getDestino())){
+				this.setDestino(null);
+			}else{
+				this.irHaciaElPunto(this.getDestino());
+			}
+			
+			
+		}else if (miObjetivoEsUnPez()){
+			this.acercarseALaCosa(this.getObjetivo());
+			
+			
+		}else if (miObjetivoEsComida()){
+			Comida comida = (Comida) this.getObjetivo();
+			this.irHaciaLaComida(comida);
+			
+			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	private void buscarObjetivo(){
+		Pez amigo = buscarPezParaSeguirlo();
 		if(amigo == null){
 			//no hay nadie cerca, entonces exploramos
 			int x = generator.nextInt(pecera.getHeight()/2-this.getAlto());
 			int y = generator.nextInt(pecera.getWidth()/2-this.getLargo());
-			this.destino = new Point(x, y);
-			
+			this.setDestino(new Point(x, y));
 		}else{
-			//encontramos un pez, vamos hacia el
+			//encontramos un pez, entonces lo seguimos
 			this.setObjetivo(amigo);
 		}
 	}
 	
 	
-	private void evaluarSiSeguirAlObjetivo(){
-		if(this.getObjetivo().esUnPez()){
-			//si estabamos siguiendo a un pez, buscamos comida
-			Comida obj = buscarComida();
-			if (obj == null){
-				//simplemente seguimos al pez
-				this.acercarseALaCosa(this.getObjetivo());
-			}else{
-				this.setObjetivo(obj);
-			}
-		}else if (this.getObjetivo().esComida()){
-			//vamos por la comida.
-			Comida obj = (Comida)this.getObjetivo();
-			this.irHaciaLaCosa(obj);
-			if (this.estaEnElPunto(obj.getPosicion())){
-				//llegamos a la comida!!
-				//TODO la destruimos.
-				pecera.destruirComida(obj);
-			}
-		}else{ //es null
-			this.executeAI();
-		}
-	}
-	
-	
-	private Comida buscarComida(){
-		for (Comida comida : pecera.getComidas()){
-			return comida;
-		}
-		return null;
-	}
-	
-	private Pez buscarPezParaSeguirlo(){ //nice name ;)
+	private Pez buscarPezParaSeguirlo(){
 		for(Pez pez: this.pecera.getPeces()){
 			if(pez != this && !pez.estaSiguiendoA(this) && this.puedeVerA(pez) ){
 				//si no es este mismo pez, no esta quieto, y no me esta siguiendo =>
@@ -142,10 +133,36 @@ public class Pez extends CosaDePecera{
 		return null; //si no encontro ninguno nos da null..
 	}
 	
-	private void acercarseALaCosa(CosaDePecera pez){
-		if (this.estaLejosDe(pez)){
-			this.irHaciaElPunto(pez.getPosicion());
+
+	public void notificarQueLlegoComida(Comida comida){
+		//llego comida, vamos hacia ella!!
+		this.setObjetivo(comida);
+		this.setDestino(null); //esto es para evitar lios cuando explora.
+	}
+	
+	
+
+	/************************************
+	 **     ANALISIS DE MOVIEMIENTO    **
+	 ************************************/
+	
+	private void irHaciaLaComida(Comida comida){
+		this.irHaciaLaCosa(comida);
+		if (this.estaEnElPunto(comida.getPosicion())){
+			//llegamos a la comida!!
+			//TODO la destruimos.
+			pecera.destruirComida(comida);
 		}
+	}
+	
+	private void acercarseALaCosa(CosaDePecera cosa){
+		if (this.estaLejosDe(cosa)){
+			this.irHaciaElPunto(cosa.getPosicion());
+		}
+	}
+	
+	protected void irHaciaLaCosa(CosaDePecera cosa){
+		this.irHaciaElPunto(cosa.getPosicion());
 	}
 	
 	private boolean estaLejosDe(CosaDePecera cosa){
@@ -153,13 +170,13 @@ public class Pez extends CosaDePecera{
 	}
 	
 	
+	
+	
+	
 	/***********************
 	 **     MOVIMIENTO    **
 	 ***********************/
 	
-	protected void irHaciaLaCosa(CosaDePecera cosa){
-		this.irHaciaElPunto(cosa.getPosicion());
-	}
 	
 	
 	protected void irHaciaElPunto(Point _destino) {
@@ -226,49 +243,48 @@ public class Pez extends CosaDePecera{
 	protected boolean estaSiguiendoA(CosaDePecera cosa){
        return this.objetivo == cosa;   
 	}
-	public Direccion getDireccion() {
-		return direccion;
-	}
-
-	public void setDireccion(Direccion direccion) {
-		this.direccion = direccion;
-	}
+	
+	
+	public void setDireccion(Direccion direccion) { this.direccion = direccion; }
+	public Direccion getDireccion() { return direccion; }
 
 	
 
-	public CosaDePecera getObjetivo() {
-		
-		return objetivo;
-	}
-
-	public void setObjetivo(CosaDePecera objetivo) {
-		this.objetivo = objetivo;
-	}
 
 
-	public int getVelocidad() {
-		return (int)this.velocidad;
-	}
+	public int getVelocidad() { return (int)this.velocidad; }
 	
-	public BufferedImage getImagen() {
-		
-		return this.imagenes[this.direccion.ordinal()];
-	}
+	public BufferedImage getImagen() { return this.imagenes[this.direccion.ordinal()]; }
 	
-	public void setVelocidad(double velocidad) {
-		this.velocidad = velocidad;
-		
-	}
+	public void setVelocidad(double velocidad) { this.velocidad = velocidad; }
 	
 	@Override
-	public void setVelocidad(int velocidad) {
-	 
-		this.velocidad = velocidad;
-	}
+	public void setVelocidad(int velocidad) { this.velocidad = velocidad; }
 
-	@Override
-	public boolean esUnPez(){
-		return true;
+	
+	
+	
+	public CosaDePecera getObjetivo() { return objetivo; }
+	public void setObjetivo(CosaDePecera objetivo) { this.objetivo = objetivo; }
+
+	public Point getDestino() { return destino; }
+	public void setDestino(Point destino) { this.destino = destino; }
+	
+	
+	private boolean tengoObjetivo(){
+		return (this.getObjetivo() != null) || (this.getDestino() != null);
+	}
+	
+	private boolean miObjetivoEsUnPez(){
+		return this.getObjetivo().esUnPez() == true;
+	}
+	
+	private boolean miObjetivoEsComida(){
+		return this.getObjetivo().esComida() == true;
+	}
+	
+	private boolean miObjetivoEsExplorar(){
+		return this.getDestino() != null;
 	}
 	
 }

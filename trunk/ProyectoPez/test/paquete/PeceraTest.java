@@ -17,15 +17,16 @@ public class PeceraTest {
 	
 	
 	public static void main(String[] args) {
-		//peceraConPecesNormales();
+		peceraConPecesNormales();
 		//peceraConAlgunosPecesAvatar();
-		peceraConPezRobot();
+		//peceraConPezRobot();
 	}
 	
 	
 	
 	
 	
+	@SuppressWarnings("unused")
 	private static void peceraConAlgunosPecesAvatar() {
 		prepararVentanaConPecera();
 		pecera.agregarPez( new Pez(new Point(100,300),10));
@@ -43,6 +44,7 @@ public class PeceraTest {
 	/***********************
 	 **       TESTS       **
 	 ***********************/
+	@SuppressWarnings("unused")
 	private static void peceraConPezRobot() {
 		prepararVentanaConPecera();
 		pecera.agregarPez( new PezControl(new Point(0,0),15));
@@ -52,7 +54,7 @@ public class PeceraTest {
 		crearPezComun(7);
 	}
 	
-	
+
 	public static void peceraConPecesNormales(){
 		prepararVentanaConPecera();
 		crearPezComun(8);
