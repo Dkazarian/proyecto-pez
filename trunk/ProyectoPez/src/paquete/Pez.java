@@ -122,7 +122,7 @@ public class Pez extends CosaDePecera{
 		
 		y = this.getPosicion().y + RandomGenerator .randomInt(-100, 100);
 		if ( y < 0 ) y = 0;
-		if ( y > pecera.getHeight() ) y = pecera.getHeight();
+		if ( y > pecera.getHeight()-this.getAlto() ) y = pecera.getHeight()-this.getAlto();
 		
 		if (this.getDireccion()==Direccion.DERECHA){
 			if (xActual > pecera.getWidth() - cercaDelBorde){
