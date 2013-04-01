@@ -118,10 +118,12 @@ public class Pez extends CosaDePecera{
 	private Point buscarPuntoParaExplorar(){
 		final int cercaDelBorde = 100;
 		int x; int y;
-		int xActual = this.getPosicion().x;
+		int xActual = this.getPosicionX();
 		
-		y = this.getPosicion().y + RandomGenerator .randomInt(-100, 100);
+		y = this.getPosicionY() + RandomGenerator .randomInt(-100, 100);
 		if ( y < 0 ) y = 0;
+		
+		//Faltaba restar el alto
 		if ( y > pecera.getHeight()-this.getAlto() ) y = pecera.getHeight()-this.getAlto();
 		
 		if (this.getDireccion()==Direccion.DERECHA){
