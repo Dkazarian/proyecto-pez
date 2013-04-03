@@ -80,8 +80,8 @@ public class PeceraTest {
 	}
 	
 	private static void crearPezComun(int velocidad){
-		int x = generator.randomInt(0, pecera.getWidth()) - 80;
-		int y = generator.randomInt(0, pecera.getHeight()) - 80;
+		int x = RandomGenerator.randomInt(0, pecera.getWidth()) - 80;
+		int y = RandomGenerator.randomInt(0, pecera.getHeight()) - 80;
 		Point p = new Point(x, y);
 		
 		pecera.agregarPez( new Pez(p, velocidad));
