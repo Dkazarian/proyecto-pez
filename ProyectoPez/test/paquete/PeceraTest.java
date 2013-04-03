@@ -12,7 +12,6 @@ import utils.RandomGenerator;
 public class PeceraTest {
 	
 	private static Pecera pecera;
-	static RandomGenerator generator = new RandomGenerator();
 	
 	
 	
